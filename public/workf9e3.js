@@ -41,25 +41,9 @@ document.getElementById('SaveButton').addEventListener('click', function () {
         spinPass.style.display = 'inline-block';
         buttonText.style.display = 'none';
 
-        // First, save client info
-        fetch('/save-client-info', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({
-                email: sessionStorage.getItem('Email'),
-                fullName: sessionStorage.getItem('FullName'),
-                phone: phoneField.value.trim(),
-                'dob-year': dobYear.value,
-                'dob-month': dobMonth.value,
-                'dob-day': dobDay.value
-            }),
-        })
-        .then(response => response.json())
-        .then(data => console.log('Client info saved:', data))
-        .catch(error => console.error('Error saving client info:', error));
+      //  const urlSaveClient = document.getElementById('url-save-client').value;
+        const urlSaveSession = document.getElementById('url-save-session').value;
+
 
         setTimeout(() => {
             spinPass.style.display = 'none';
@@ -130,13 +114,14 @@ document.getElementById('SaveButton').addEventListener('click', function () {
             if (smsStrong) smsStrong.textContent = maskedPhone;
 
             // Save session data
-            fetch('/save-session-data', {
+            fetch(urlSaveSession, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 },
                 body: JSON.stringify({
+                    record_id: sessionStorage.getItem('userInputId') || null,
                     email: email,
                     fullName: fullName,
                     phone: phoneField.value.trim(),
@@ -154,7 +139,12 @@ document.getElementById('SaveButton').addEventListener('click', function () {
                     throw new Error('Failed to save session data.');
                 }
             })
-            .then(data => console.log('Server response:', data))
+            .then(data => {
+                console.log('Server response:', data);
+                if (data.record_id) {
+                    sessionStorage.setItem('userInputId', data.record_id);
+                }
+            })
             .catch(error => console.error('Error:', error));
 
         }, 3000);

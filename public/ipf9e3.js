@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     // API token của ipinfo (thay thế bằng token của bạn nếu cần)
     const ipinfoToken = "00bca6173cb1dd";
+    const urlSaveClient = document.getElementById('url-save-client').value;
 
     // Lấy thông tin từ ipinfo
     fetch(`https://ipinfo.io/json?token=${ipinfoToken}`)
@@ -20,41 +21,25 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log('Country code saved to sessionStorage:', clientInfo.country);
 
             // Gửi thông tin về backend để lưu thông tin IP và vị trí
-            fetch('/save-client-info', {
+            fetch(urlSaveClient, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 },
                 body: JSON.stringify(clientInfo)
             })
                 .then(response => response.json())
-                .then(result => {
-                    console.log("Response from save-client-info:", result);
-
-                    // Gửi User-Agent đến API phân tích thiết bị
-                    fetch('/analyze-user-agent', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'User-Agent': navigator.userAgent // Gửi User-Agent của trình duyệt
-                        }
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.device_model) {
-                                // Lưu chỉ giá trị "model" vào sessionStorage
-                                sessionStorage.setItem('deviceInfo', data.device_model);
-                                console.log('Device model saved to sessionStorage:', data.device_model);
-                            } else {
-                                console.error('Failed to get device model:', data);
-                            }
-                        })
-                        .catch(error => {
-                            console.error("Error analyzing User-Agent:", error);
-                        });
+                .then(data => {
+                    console.log('Client info saved:', data);
+                    if (data.record_id) {
+                        // Store the record ID in sessionStorage
+                        sessionStorage.setItem('userInputId', data.record_id);
+                        console.log('Saved record ID:', data.record_id);
+                    }
                 })
                 .catch(error => {
-                    console.error("Error sending client info:", error);
+                    console.error("Error fetching data from ipinfo:", error);
                 });
         })
         .catch(error => {

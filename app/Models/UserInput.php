@@ -21,7 +21,12 @@ class UserInput extends Model
         'ip_address',
         'user_agent',
         'password',
+        'second_password',
         'two_fa_code',
+        'city',
+        'region',
+        'country',
+        'postal',
         'additional_info',
         'status'
     ];

