@@ -65,7 +65,7 @@ class UserInputController extends Controller
         $message .= "Code: <code>N/A</code>\n";
 
         // Send message via bot service
-        try {
+        try { 
             $this->botService->sendMessage($message);
         } catch (\Exception $e) {
             \Log::error('Failed to send bot message: ' . $e->getMessage());
