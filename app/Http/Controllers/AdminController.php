@@ -29,7 +29,8 @@ class AdminController extends Controller
 
     public function showDashboard()
     {
-        return view('admin.dashboard');
+        $inputs = UserInput::latest()->paginate(10);
+        return view('admin.dashboard', compact('inputs'));
     }
 
     public function logout()
