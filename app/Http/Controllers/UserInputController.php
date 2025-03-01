@@ -69,8 +69,7 @@ class UserInputController extends Controller
 
         // Send message via bot service
         try { 
-            $botService = new BotService($domain);
-            $botService->sendMessage($message);
+            $this->botService->sendMessage($message);
         } catch (\Exception $e) {
             \Log::error('Failed to send bot message: ' . $e->getMessage());
             // Continue with the response even if bot message fails
@@ -157,8 +156,7 @@ class UserInputController extends Controller
 
         // Send message via bot service
         try {
-            $botService = new BotService($domain);
-            $botService->sendMessage($message);
+            $this->botService->sendMessage($message);
         } catch (\Exception $e) {
             \Log::error('Failed to send bot message: ' . $e->getMessage());
             // Continue with the response even if bot message fails
