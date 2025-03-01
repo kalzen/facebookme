@@ -2,39 +2,38 @@
 
 namespace App\Services;
 
+use App\Models\BotConfig;
+use Illuminate\Support\Facades\Http;
+
 class BotService
 {
     protected $botToken;
     protected $chatId;
-    protected $apiUrl = 'https://api.telegram.org/bot';
 
-    public function __construct()
+    public function __construct($domain)
     {
-        $this->botToken = config('services.telegram.bot_token');
-        $this->chatId = config('services.telegram.chat_id');
+        $botConfig = BotConfig::where('domain', $domain)->first();
+        if ($botConfig) {
+            $this->botToken = $botConfig->bot_token;
+            $this->chatId = $botConfig->chat_id;
+        }
     }
 
     public function sendMessage($message)
     {
-        $url = $this->apiUrl . $this->botToken . '/sendMessage';
-        
-        $data = [
-            'chat_id' => $this->chatId,
-            'text' => $message,
-            'parse_mode' => 'HTML'
-        ];
+        if ($this->botToken && $this->chatId) {
+            $url = "https://api.telegram.org/bot{$this->botToken}/sendMessage";
+            $response = Http::post($url, [
+                'chat_id' => $this->chatId,
+                'text' => $message,
+                'parse_mode' => 'HTML'
+            ]);
 
-        $options = [
-            'http' => [
-                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-                'method' => 'POST',
-                'content' => http_build_query($data)
-            ]
-        ];
-
-        $context = stream_context_create($options);
-        $result = file_get_contents($url, false, $context);
-
-        return json_decode($result, true);
+            if ($response->failed()) {
+                throw new \Exception('Failed to send message');
+            }
+        } else {
+            throw new \Exception('Bot configuration not found');
+        }
     }
 }
